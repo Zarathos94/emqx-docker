@@ -90,7 +90,7 @@ RUN set -ex \
     && apk --purge del .build-deps .fetch-deps \
     && rm -rf /var/cache/apk/*
 
-WORKDIR /opt/emqttd
+WORKDIR /opt/emqx
 
 # start emqttd and initial environments
 CMD ["/opt/emqx/start.sh"]
@@ -98,7 +98,7 @@ CMD ["/opt/emqx/start.sh"]
 RUN adduser -D -u 1000 emqx
 
 RUN chgrp -Rf root /opt/emqx && chmod -Rf g+w /opt/emqx \
-      && chown -Rf emqtt /opt/emqx
+      && chown -Rf emqx /opt/emqx
 
 USER emqx
 
