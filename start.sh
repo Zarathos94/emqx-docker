@@ -15,7 +15,7 @@ LOCAL_IP=$(hostname -i |grep -E -oh '((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.
 # Base settings in /opt/emqttd/etc/emq.conf
 # Plugin settings in /opt/emqttd/etc/plugins
 
-_EMQ_HOME="/opt/emqtt"
+_EMQ_HOME="/opt/emqx"
 
 if [[ -z "$PLATFORM_ETC_DIR" ]]; then
     export PLATFORM_ETC_DIR="$_EMQ_HOME/etc"
@@ -97,8 +97,8 @@ if [[ ! -z "$EMQ_ADMIN_PASSWORD" ]]; then
 fi
 
 # Catch all EMQ_ prefix environment variable and match it in configure file
-CONFIG=/opt/emqttd/etc/emq.conf
-CONFIG_PLUGINS=/opt/emqttd/etc/plugins
+CONFIG=/opt/emqx/etc/emq.conf
+CONFIG_PLUGINS=/opt/emqx/etc/plugins
 for VAR in $(env)
 do
     # Config normal keys such like node.name = emqttd@127.0.0.1
@@ -131,19 +131,19 @@ if [[ ! -z "$EMQ_LOADED_PLUGINS" ]]; then
     echo "EMQ_LOADED_PLUGINS=$EMQ_LOADED_PLUGINS"
     # First, remove special char at header
     # Next, replace special char to ".\n" to fit emq loaded_plugins format
-    echo $(echo "$EMQ_LOADED_PLUGINS."|sed -e "s/^[^A-Za-z0-9_]\{1,\}//g"|sed -e "s/[^A-Za-z0-9_]\{1,\}/\. /g")|tr ' ' '\n' > /opt/emqttd/data/loaded_plugins
+    echo $(echo "$EMQ_LOADED_PLUGINS."|sed -e "s/^[^A-Za-z0-9_]\{1,\}//g"|sed -e "s/[^A-Za-z0-9_]\{1,\}/\. /g")|tr ' ' '\n' > /opt/emqx/data/loaded_plugins
 fi
 
 ## EMQ Main script
 
 # Start and run emqttd, and when emqttd crashed, this container will stop
 
-/opt/emqttd/bin/emqttd start
-tail -f /opt/emqttd/log/erlang.log.1 &
+/opt/emqx/bin/emqx start
+tail -f /opt/emqx/log/erlang.log.1 &
 
 # Wait and ensure emqttd status is running
 WAIT_TIME=0
-while [[ -z "$(/opt/emqttd/bin/emqttd_ctl status |grep 'is running'|awk '{print $1}')" ]]
+while [[ -z "$(/opt/emqx/bin/emqx_ctl status |grep 'is running'|awk '{print $1}')" ]]
 do
     sleep 1
     echo "['$(date -u +"%Y-%m-%dT%H:%M:%SZ")']:waiting emqttd"
@@ -169,14 +169,14 @@ fi
 
 if [[ ! -z "$EMQ_JOIN_CLUSTER" ]]; then
     echo "['$(date -u +"%Y-%m-%dT%H:%M:%SZ")']:emqttd try join $EMQ_JOIN_CLUSTER"
-    /opt/emqttd/bin/emqttd_ctl cluster join $EMQ_JOIN_CLUSTER &
+    /opt/emqx/bin/emqx_ctl cluster join $EMQ_JOIN_CLUSTER &
 fi
 
 # Change admin password
 
 if [[ ! -z "$EMQ_ADMIN_PASSWORD" ]]; then
     echo "['$(date -u +"%Y-%m-%dT%H:%M:%SZ")']:admin password changed to $EMQ_ADMIN_PASSWORD"
-    /opt/emqttd/bin/emqttd_ctl admins passwd admin $EMQ_ADMIN_PASSWORD &
+    /opt/emqx/bin/emqx_ctl admins passwd admin $EMQ_ADMIN_PASSWORD &
 fi
 
 # monitor emqttd is running, or the docker must stop to let docker PaaS know
@@ -187,7 +187,7 @@ IDLE_TIME=0
 while [[ $IDLE_TIME -lt 5 ]]
 do  
     IDLE_TIME=$((IDLE_TIME+1))
-    if [[ ! -z "$(/opt/emqttd/bin/emqttd_ctl status |grep 'is running'|awk '{print $1}')" ]]; then
+    if [[ ! -z "$(/opt/emqx/bin/emqx_ctl status |grep 'is running'|awk '{print $1}')" ]]; then
         IDLE_TIME=0
     else
         echo "['$(date -u +"%Y-%m-%dT%H:%M:%SZ")']:emqttd not running, waiting for recovery in $((25-IDLE_TIME*5)) seconds"
