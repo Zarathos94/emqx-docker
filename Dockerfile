@@ -1,4 +1,4 @@
-FROM alpine:3.7
+FROM erlang:21-alpine
 
 MAINTAINER Huang Rui <vowstar@gmail.com>, Turtle <turtled@emqtt.io>
 
