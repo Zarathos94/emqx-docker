@@ -11,6 +11,7 @@ pipeline {
     }
 
     environment {
+        BRANCH_NAME = "master"
         SLACK_CHANNEL = "#realtime-builds"
         SERVICE_NAME = "naga/social/emqtt"
         ECR_REPO_URL = "${ECR_BASE_URL}/${SERVICE_NAME}"
