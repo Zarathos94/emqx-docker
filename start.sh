@@ -97,7 +97,7 @@ if [[ ! -z "$EMQ_ADMIN_PASSWORD" ]]; then
 fi
 
 # Catch all EMQ_ prefix environment variable and match it in configure file
-CONFIG=/opt/emqx/etc/emq.conf
+CONFIG=/opt/emqx/etc/emqx.conf
 CONFIG_PLUGINS=/opt/emqx/etc/plugins
 for VAR in $(env)
 do
