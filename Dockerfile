@@ -78,14 +78,14 @@ RUN set -ex \
         ncurses-libs \
         readline \
     # add latest rebar
-    && git clone -b ${EMQ_VERSION} https://github.com/emqtt/emq-relx.git /emqttd \
-    && cd /emqttd \
+    && git clone -b ${EMQ_VERSION} https://github.com/emqx/emqx-rel.git /emqx \
+    && cd /emqx \
     && make \
-    && mkdir -p /opt && mv /emqttd/_rel/emqttd /opt/emqttd \
-    && cd / && rm -rf /emqttd \
-    && mv /start.sh /opt/emqttd/start.sh \
-    && chmod +x /opt/emqttd/start.sh \
-    && ln -s /opt/emqttd/bin/* /usr/local/bin/ \
+    && mkdir -p /opt && mv /emqx/_rel/emqx /opt/emqx \
+    && cd / && rm -rf /emqx \
+    && mv /start.sh /opt/emqx/start.sh \
+    && chmod +x /opt/emqx/start.sh \
+    && ln -s /opt/emqx/bin/* /usr/local/bin/ \
     # removing fetch deps and build deps
     && apk --purge del .build-deps .fetch-deps \
     && rm -rf /var/cache/apk/*
@@ -93,16 +93,16 @@ RUN set -ex \
 WORKDIR /opt/emqttd
 
 # start emqttd and initial environments
-CMD ["/opt/emqttd/start.sh"]
+CMD ["/opt/emqx/start.sh"]
 
-RUN adduser -D -u 1000 emqtt
+RUN adduser -D -u 1000 emqx
 
-RUN chgrp -Rf root /opt/emqttd && chmod -Rf g+w /opt/emqttd \
-      && chown -Rf emqtt /opt/emqttd
+RUN chgrp -Rf root /opt/emqx && chmod -Rf g+w /opt/emqx \
+      && chown -Rf emqtt /opt/emqx
 
-USER emqtt
+USER emqx
 
-VOLUME ["/opt/emqttd/log", "/opt/emqttd/data", "/opt/emqttd/lib", "/opt/emqttd/etc"]
+VOLUME ["/opt/emqx/log", "/opt/emqx/data", "/opt/emqx/lib", "/opt/emqx/etc"]
 
 # emqttd will occupy these port:
 # - 1883 port for MQTT
