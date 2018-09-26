@@ -56,6 +56,7 @@ RUN set -xe \
 
 ENV EMQX_VERSION=v3.0-beta.3
 
+
 RUN set -ex \
         cd / && git clone -b ${EMQX_VERSION} https://github.com/emqx/emqx-rel /emqx \
         && cd /emqx \
