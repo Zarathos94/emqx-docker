@@ -41,12 +41,6 @@ if [[ -z "$EMQ_NODE__NAME" ]]; then
     export EMQ_NODE__NAME="$EMQ_NAME@$EMQ_HOST"
 fi
 
-# Set hosts to prevent cluster mode failed
-
-# if [[ ! -z "$LOCAL_IP" && ! -z "$EMQ_HOST" ]]; then
-#     echo "$LOCAL_IP        $EMQ_HOST" >> /etc/hosts
-# fi
-
 # unset EMQ_NAME
 # unset EMQ_HOST
 
