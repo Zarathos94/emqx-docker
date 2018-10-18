@@ -33,6 +33,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
+                step([$class: 'WsCleanup'])
                 checkout scm
             }
         }
