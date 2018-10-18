@@ -8,6 +8,7 @@ ENV EMQX_VERSION=v3.0-beta.3
 
 COPY ./start.sh /start.sh
 
+
 RUN set -xe \
         && OTP_DOWNLOAD_URL="https://github.com/erlang/otp/archive/OTP-${OTP_VERSION}.tar.gz" \
         && OTP_DOWNLOAD_SHA256="4e9c98b5f29918d0896b21ce28b13c7928d4c9bd6a0c7d23b4f19b27f6e3b6f7" \
