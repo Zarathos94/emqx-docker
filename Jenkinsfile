@@ -42,7 +42,7 @@ pipeline {
             steps {
                 ansiColor('xterm') {
                     retry(2) {
-                        sh 'docker build -t ${ECR_REPO_URL}:${BRANCH_NAME}-${BUILD_NUMBER} -t ${ECR_REPO_URL}:${BRANCH_NAME}-latest .'
+                        sh 'docker build --no-cache -t ${ECR_REPO_URL}:${BRANCH_NAME}-${BUILD_NUMBER} -t ${ECR_REPO_URL}:${BRANCH_NAME}-latest .'
                     }
                 }
             }
